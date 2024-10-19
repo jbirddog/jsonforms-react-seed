@@ -53,42 +53,43 @@ export const JsonFormsDemo: FC = () => {
   const [pendingTasks, setPendingTasks] = useState([]);
   const [workflowState, setWorkflowState] = useState(initialWorkflowState);
 
-  const runWorkflow = async (additionalBody?: object) => {
+  const runWorkflow = async (additionalBody: object) => {
     const resp = await fetch(`${workflowRunner}/v0/do/${workflowApiKey}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        ...(workflowState ? workflowState : {}),
-	...(additionalBody ? additionalBody : {}),
+        ...workflowState,
+	...additionalBody,
       })
     })
 
     const json = await resp.json()
     console.log(json)
       
-    setCompleted(json.completed)
-    setPendingTasks(json.pending_tasks)
-    setWorkflowState(json.state)
+    setCompleted(json.completed ?? false)
+    setPendingTasks(json.pending_tasks ?? [])
+    setWorkflowState(json.state ? { state: json.state } : {})
   }
   
   useEffect(() => {
-    runWorkflow()
+    runWorkflow({})
   }, []);
 
-  const completeTask = (bpmnId: string, data?: object) => {
-    console.log('here')
+  const completeTask = (id: string, data: object) => {
+    runWorkflow({completed_tasks: [{id, data}]})
   }
 
-  const componentForTaskSpec = (taskSpec: object) =>
-    taskSpec.typename == 'ManualTask' ?
+  const componentForTaskSpec = (task: object) =>
+    task.task_spec.typename == 'ManualTask' ?
       <ManualTask
-        bpmnId={taskSpec.bpmn_id}
-	instructions={taskSpec.extensions.instructionsForEndUser}
+        taskId={task.id}
+        bpmnId={task.task_spec.bpmn_id}
+	instructions={task.task_spec.extensions.instructionsForEndUser}
 	completer={completeTask}
       />
-    : <div>Unsupported task type: {taskSpec.typename}</div>
+    : <div>Unsupported task type: {task.task_spec.typename}</div>
   
   return (
     <Grid
@@ -103,7 +104,7 @@ export const JsonFormsDemo: FC = () => {
 	  : completed === true ?
 	    <div>Done!</div>
 	  : pendingTasks.length === 1 ?
-	    <div>{componentForTaskSpec(pendingTasks[0].task_spec)}</div>
+	    <div>{componentForTaskSpec(pendingTasks[0])}</div>
 	  : <div>Multiple tasks pending...</div>
 	    
 	}
