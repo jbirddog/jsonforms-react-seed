@@ -1,32 +1,48 @@
 {
   "type": "object",
   "properties": {
-    "name": {
-      "type": "string",
-      "minLength": 1
+    "pushups": {
+      "type": "boolean",
+      "title": "When Chuck Norris does a pushup, he’s pushing the Earth down.",
+      "oneOf": [
+        {
+          "title": "True",
+          "const": true
+        },
+        {
+          "title": "False",
+          "const": false
+        }
+      ]
     },
-    "description": {
-      "title": "Long Description",
-      "type": "string"
+    "thanos": {
+      "type": "boolean",
+      "title": "Chuck Norris was given a bloody nose by Thanos the god like villain from the Avengers Movies",
+      "oneOf": [
+        {
+          "title": "True",
+          "const": true
+        },
+        {
+          "title": "False",
+          "const": false
+        }
+      ]
     },
-    "done": {
-      "type": "boolean"
-    },
-    "due_date": {
-      "type": "string",
-      "format": "date"
-    },
-    "rating": {
-      "type": "integer",
-      "maximum": 5
-    },
-    "recurrence": {
-      "type": "string",
-      "enum": ["Never", "Daily", "Weekly", "Monthly"]
-    },
-    "recurrence_interval": {
-      "type": "integer"
+    "bulletproof": {
+      "type": "boolean",
+      "title": "A bulletproof vest wears Chuck Norris for protection.",
+      "oneOf": [
+        {
+          "title": "True",
+          "const": true
+        },
+        {
+          "title": "False",
+          "const": false
+        }
+      ]
     }
   },
-  "required": ["name", "due_date"]
+  "required": ["pushups", "thanos", "bulletproof"]
 }
