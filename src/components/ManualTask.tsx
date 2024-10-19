@@ -17,6 +17,7 @@ const classes = {
   },
   resetButton: {
     margin: 'auto !important',
+    'margin-right': '1em',
     display: 'block !important',
   },
 };
