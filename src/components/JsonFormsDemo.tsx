@@ -45,15 +45,16 @@ const renderers = [
 ];
 
 const workflowRunner = 'http://localhost:8100'
-const workflowApiKey = '9dbf5fd3-3729-4171-bc9a-737d60d757e8'
+//const workflowApiKey = '9dbf5fd3-3729-4171-bc9a-737d60d757e8'
+const workflowApiKey = '31200470-da18-48f9-8ba1-6225be674c33'
 const initialWorkflowState = {};
 
 export const JsonFormsDemo: FC = () => {
   const [data, setData] = useState<object>({});
   
+  const [completed, setCompleted] = useState(false);
   const [pendingTasks, setPendingTasks] = useState([]);
-  const [workflowCompleted, setWorkflowCompleted] = useState(false);
-  const [workflowState, setWorkflowState] = useState(initialWorkflowState);
+  const [state, setState] = useState(initialWorkflowState);
 
   useEffect(() => {
     fetch(`${workflowRunner}/v0/do/${workflowApiKey}`, {
@@ -61,10 +62,16 @@ export const JsonFormsDemo: FC = () => {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(workflowState)
+      body: JSON.stringify(state)
     })
     .then(resp => resp.json())
-    .then(state => console.log(state))
+    .then(json => {
+      console.log(json)
+      
+      setCompleted(json.completed)
+      setPendingTasks(json.pendingTasks)
+      setState(json.state)
+    })
     .catch(err => console.log('Error running workflow:', err))
   }, []);
   
