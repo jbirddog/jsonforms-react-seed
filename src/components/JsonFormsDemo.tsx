@@ -1,17 +1,9 @@
 import { FC, useEffect, useMemo, useState } from 'react';
-import { JsonForms } from '@jsonforms/react';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import {
-  materialCells,
-  materialRenderers,
-} from '@jsonforms/material-renderers';
-import RatingControl from './RatingControl';
-import ratingControlTester from '../ratingControlTester';
-import schema from '../schema.json';
-import uischema from '../uischema.json';
 
 import { ManualTask } from './ManualTask'
+import { UserTask } from './UserTask'
 
 const classes = {
   container: {
@@ -29,17 +21,7 @@ const classes = {
     backgroundColor: '#cecece',
     marginBottom: '1rem',
   },
-  demoform: {
-    margin: 'auto',
-    padding: '1rem',
-  },
 };
-
-const renderers = [
-  ...materialRenderers,
-  //register custom renderers
-  { tester: ratingControlTester, renderer: RatingControl },
-];
 
 const workflowRunner = 'http://localhost:8100'
 //const workflowApiKey = '9dbf5fd3-3729-4171-bc9a-737d60d757e8'
@@ -87,6 +69,15 @@ export const JsonFormsDemo: FC = () => {
         taskId={task.id}
         bpmnId={task.task_spec.bpmn_id}
 	instructions={task.task_spec.extensions.instructionsForEndUser}
+	completer={completeTask}
+      />
+    : task.task_spec.typename == 'UserTask' ?
+      <UserTask
+        taskId={task.id}
+	bpmnId={task.task_spec.bpmn_id}
+	instructions={task.task_spec.extensions.instructionsForEndUser}
+	jsonSchemaFilename={task.task_spec.extensions.properties.formJsonSchemaFilename}
+	uiSchemaFilename={task.task_spec.extensions.properties.formUiSchemaFilename}
 	completer={completeTask}
       />
     : <div>Unsupported task type: {task.task_spec.typename}</div>

@@ -6,7 +6,7 @@ interface ManualTaskProps {
   taskId: string
   bpmnId: string
   instructions?: string
-  completer(bpmnId: string, data: object): void;
+  completer(bpmnId: string, data: object): void
 }
 
 const classes = {
