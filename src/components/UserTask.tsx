@@ -49,6 +49,7 @@ export const UserTask: FC = ({
   completer,
 }: UserTaskProps) => {
   const [data, setData] = useState(taskData)
+  const [errors, setErrors] = useState([])
   const markedInstructions = marked.parse(instructions ?? '# No Instructions Provided.')
   
   return (
@@ -61,7 +62,11 @@ export const UserTask: FC = ({
           data={data}
           renderers={renderers}
           cells={materialCells}
-          onChange={({ data }) => setData(data)}
+          onChange={({ data, errors }) => {
+	    setData(data)
+	    setErrors(errors)
+	    console.log(errors)
+	  }}
         />
       </div>
       <Button
@@ -69,6 +74,7 @@ export const UserTask: FC = ({
         onClick={() => completer(taskId, data)}
         color="primary"
         variant="contained"
+	disabled={errors.length > 0}
         data-testid="clear-data">
         Continue
       </Button>
