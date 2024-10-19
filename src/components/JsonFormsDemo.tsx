@@ -66,20 +66,6 @@ export const JsonFormsDemo: FC = () => {
       spacing={1}
       style={classes.container}>
       <Grid item sm={6}>
-        <Typography variant={'h4'}>Bound data</Typography>
-        <div style={classes.dataContent}>
-          <pre id="boundData">{stringifiedData}</pre>
-        </div>
-        <Button
-          style={classes.resetButton}
-          onClick={clearData}
-          color="primary"
-          variant="contained"
-          data-testid="clear-data">
-          Clear data
-        </Button>
-      </Grid>
-      <Grid item sm={6}>
         <Typography variant={'h4'}>Rendered form</Typography>
         <div style={classes.demoform}>
           <JsonForms
@@ -95,3 +81,20 @@ export const JsonFormsDemo: FC = () => {
     </Grid>
   );
 };
+
+      /*
+      <Grid item sm={6}>
+        <Typography variant={'h4'}>Bound data</Typography>
+        <div style={classes.dataContent}>
+          <pre id="boundData">{stringifiedData}</pre>
+        </div>
+        <Button
+          style={classes.resetButton}
+          onClick={clearData}
+          color="primary"
+          variant="contained"
+          data-testid="clear-data">
+          Clear data
+        </Button>
+      </Grid>
+      */
