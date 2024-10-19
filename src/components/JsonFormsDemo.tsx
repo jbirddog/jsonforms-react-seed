@@ -44,16 +44,16 @@ const renderers = [
   { tester: ratingControlTester, renderer: RatingControl },
 ];
 
-const workflowRunner = 'http://localhost:8004'
+const workflowRunner = 'http://localhost:8100'
 const workflowApiKey = '9dbf5fd3-3729-4171-bc9a-737d60d757e8'
 const initialWorkflowState = {};
 
 export const JsonFormsDemo: FC = () => {
   const [data, setData] = useState<object>({});
-  const stringifiedData = useMemo(() => JSON.stringify(data, null, 2), [data]);
   
-  const [workflowState, setWorkflowState] = useState<object>(initialWorkflowState);
-  //const stringifiedData = useMemo(() => JSON.stringify(data), [data]);
+  const [pendingTasks, setPendingTasks] = useState([]);
+  const [workflowCompleted, setWorkflowCompleted] = useState(false);
+  const [workflowState, setWorkflowState] = useState(initialWorkflowState);
 
   useEffect(() => {
     fetch(`${workflowRunner}/v0/do/${workflowApiKey}`, {
