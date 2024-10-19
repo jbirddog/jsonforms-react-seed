@@ -12,6 +12,8 @@ import ratingControlTester from '../ratingControlTester';
 import schema from '../schema.json';
 import uischema from '../uischema.json';
 
+import { ManualTask } from './ManualTask'
+
 const classes = {
   container: {
     padding: '1em',
@@ -54,30 +56,37 @@ export const JsonFormsDemo: FC = () => {
   
   const [completed, setCompleted] = useState(false);
   const [pendingTasks, setPendingTasks] = useState([]);
-  const [state, setState] = useState(initialWorkflowState);
+  const [workflowState, setWorkflowState] = useState(initialWorkflowState);
 
-  useEffect(() => {
-    fetch(`${workflowRunner}/v0/do/${workflowApiKey}`, {
+  const runWorkflow = async () => {
+    const resp = await fetch(`${workflowRunner}/v0/do/${workflowApiKey}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(state)
+      body: JSON.stringify(workflowState)
     })
-    .then(resp => resp.json())
-    .then(json => {
-      console.log(json)
+
+    const json = await resp.json()
+    console.log(json)
       
-      setCompleted(json.completed)
-      setPendingTasks(json.pendingTasks)
-      setState(json.state)
-    })
-    .catch(err => console.log('Error running workflow:', err))
-  }, []);
+    setCompleted(json.completed)
+    setPendingTasks(json.pending_tasks)
+    setWorkflowState(json.state)
+  }
   
-  const clearData = () => {
-    setData({});
-  };
+  useEffect(() => {
+    runWorkflow()
+  }, []);
+
+  const componentForTaskSpec = (taskSpec: object) =>
+    taskSpec.typename == 'ManualTask' ?
+      <ManualTask
+        bpmnId={taskSpec.bpmn_id}
+	instructions={taskSpec.extensions.instructionsForEndUser}
+      />
+    : <div>Unsupported task type: {taskSpec.typename}</div>
+  
   return (
     <Grid
       container
@@ -85,6 +94,22 @@ export const JsonFormsDemo: FC = () => {
       spacing={1}
       style={classes.container}>
       <Grid item sm={6}>
+	{
+	  completed === false && pendingTasks.length === 0 ?
+	    <div>Loading...</div>
+	  : completed === true ?
+	    <div>Done!</div>
+	  : pendingTasks.length === 1 ?
+	    <div>{componentForTaskSpec(pendingTasks[0].task_spec)}</div>
+	  : <div>Multiple tasks pending...</div>
+	    
+	}
+      </Grid>
+    </Grid>
+  );
+};
+
+/*
         <Typography variant={'h4'}>Rendered form</Typography>
         <div style={classes.demoform}>
           <JsonForms
@@ -96,10 +121,7 @@ export const JsonFormsDemo: FC = () => {
             onChange={({ data }) => setData(data)}
           />
         </div>
-      </Grid>
-    </Grid>
-  );
-};
+*/
 
       /*
       <Grid item sm={6}>
