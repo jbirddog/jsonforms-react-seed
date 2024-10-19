@@ -1,7 +1,6 @@
 import { FC, useEffect, useMemo, useState } from 'react';
 import { JsonForms } from '@jsonforms/react';
 import Grid from '@mui/material/Grid';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import {
   materialCells,
@@ -30,10 +29,6 @@ const classes = {
     backgroundColor: '#cecece',
     marginBottom: '1rem',
   },
-  resetButton: {
-    margin: 'auto !important',
-    display: 'block !important',
-  },
   demoform: {
     margin: 'auto',
     padding: '1rem',
@@ -58,13 +53,16 @@ export const JsonFormsDemo: FC = () => {
   const [pendingTasks, setPendingTasks] = useState([]);
   const [workflowState, setWorkflowState] = useState(initialWorkflowState);
 
-  const runWorkflow = async () => {
+  const runWorkflow = async (additionalBody?: object) => {
     const resp = await fetch(`${workflowRunner}/v0/do/${workflowApiKey}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(workflowState)
+      body: JSON.stringify({
+        ...(workflowState ? workflowState : {}),
+	...(additionalBody ? additionalBody : {}),
+      })
     })
 
     const json = await resp.json()
@@ -79,11 +77,16 @@ export const JsonFormsDemo: FC = () => {
     runWorkflow()
   }, []);
 
+  const completeTask = (bpmnId: string, data?: object) => {
+    console.log('here')
+  }
+
   const componentForTaskSpec = (taskSpec: object) =>
     taskSpec.typename == 'ManualTask' ?
       <ManualTask
         bpmnId={taskSpec.bpmn_id}
 	instructions={taskSpec.extensions.instructionsForEndUser}
+	completer={completeTask}
       />
     : <div>Unsupported task type: {taskSpec.typename}</div>
   
