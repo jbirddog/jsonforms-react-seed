@@ -2,10 +2,10 @@ import { FC } from 'react';
 import Button from '@mui/material/Button';
 
 interface BoundaryEventProps {
-  taskId: string
-  bpmnId: string
-  buttonLabel?: string
-  completer(bpmnId: string, data: object): void
+  taskId: string;
+  bpmnId: string;
+  buttonLabel?: string;
+  completer(bpmnId: string, data: object): void;
 }
 
 const classes = {
@@ -17,14 +17,14 @@ const classes = {
     margin: 'auto !important',
     display: 'block !important',
   },
-}
+};
 
 export const BoundaryEvent: FC = ({
   taskId,
   bpmnId,
   buttonLabel,
-  completer
-}: BoundaryEventProps) =>
+  completer,
+}: BoundaryEventProps) => (
   <Button
     style={classes.resetButton}
     onClick={() => completer(taskId, {})}
@@ -33,3 +33,4 @@ export const BoundaryEvent: FC = ({
     data-testid="clear-data">
     {buttonLabel ?? `Complete Boundary Event ${bpmnId}`}
   </Button>
+);
