@@ -1,4 +1,4 @@
-import { FC, useMemo, useState } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 import { JsonForms } from '@jsonforms/react';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
@@ -38,24 +38,36 @@ const classes = {
   },
 };
 
-const initialData = {
-  name: 'Send email to Adrian',
-  description: 'Confirm if you have passed the subject\nHereby ...',
-  done: true,
-  recurrence: 'Daily',
-  rating: 3,
-};
-
 const renderers = [
   ...materialRenderers,
   //register custom renderers
   { tester: ratingControlTester, renderer: RatingControl },
 ];
 
-export const JsonFormsDemo: FC = () => {
-  const [data, setData] = useState<object>(initialData);
-  const stringifiedData = useMemo(() => JSON.stringify(data, null, 2), [data]);
+const workflowRunner = 'http://localhost:8004'
+const workflowApiKey = '9dbf5fd3-3729-4171-bc9a-737d60d757e8'
+const initialWorkflowState = {};
 
+export const JsonFormsDemo: FC = () => {
+  const [data, setData] = useState<object>({});
+  const stringifiedData = useMemo(() => JSON.stringify(data, null, 2), [data]);
+  
+  const [workflowState, setWorkflowState] = useState<object>(initialWorkflowState);
+  //const stringifiedData = useMemo(() => JSON.stringify(data), [data]);
+
+  useEffect(() => {
+    fetch(`${workflowRunner}/v0/do/${workflowApiKey}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(workflowState)
+    })
+    .then(resp => resp.json())
+    .then(state => console.log(state))
+    .catch(err => console.log('Error running workflow:', err))
+  }, []);
+  
   const clearData = () => {
     setData({});
   };
