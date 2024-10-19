@@ -2,6 +2,7 @@ import { FC, useEffect, useMemo, useState } from 'react';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 
+import { BoundaryEvent } from './BoundaryEvent'
 import { ManualTask } from './ManualTask'
 import { UserTask } from './UserTask'
 
@@ -49,8 +50,7 @@ export const JsonFormsDemo: FC = () => {
     })
 
     const json = await resp.json()
-    console.log(json)
-      
+    
     setCompleted(json.completed ?? false)
     setPendingTasks(json.pending_tasks ?? [])
     setWorkflowState(json.state ? { state: json.state } : {})
@@ -82,6 +82,13 @@ export const JsonFormsDemo: FC = () => {
 	uiSchemaFilename={task.task_spec.extensions.properties.formUiSchemaFilename}
 	completer={completeTask}
       />
+    : task.task_spec.typename == 'BoundaryEvent' ?
+      <BoundaryEvent
+        taskId={task.id}
+        bpmnId={task.task_spec.bpmn_id}
+	buttonLabel={task.task_spec.extensions.signalButtonLabel}
+	completer={completeTask}
+      />
     : <div>Unsupported task type: {task.task_spec.typename}</div>
   
   return (
@@ -102,41 +109,9 @@ export const JsonFormsDemo: FC = () => {
                 <pre id="boundData">{JSON.stringify(result, null, 2)}</pre>
               </div>
 	    </div>
-	  : <div>{pendingTasks.map((p, i) => componentForTaskSpec(p))}</div>
-	    
+	  : <div>{pendingTasks.map((p, i) => componentForTaskSpec(p))}</div>	    
 	}
       </Grid>
     </Grid>
   );
 };
-
-/*
-        <Typography variant={'h4'}>Rendered form</Typography>
-        <div style={classes.demoform}>
-          <JsonForms
-            schema={schema}
-            uischema={uischema}
-            data={data}
-            renderers={renderers}
-            cells={materialCells}
-            onChange={({ data }) => setData(data)}
-          />
-        </div>
-*/
-
-      /*
-      <Grid item sm={6}>
-        <Typography variant={'h4'}>Bound data</Typography>
-        <div style={classes.dataContent}>
-          <pre id="boundData">{stringifiedData}</pre>
-        </div>
-        <Button
-          style={classes.resetButton}
-          onClick={clearData}
-          color="primary"
-          variant="contained"
-          data-testid="clear-data">
-          Clear data
-        </Button>
-      </Grid>
-      */
