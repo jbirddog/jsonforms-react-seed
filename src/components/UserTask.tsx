@@ -12,6 +12,7 @@ import uischema from '../uischema.json';
 interface UserTaskProps {
   taskId: string
   bpmnId: string
+  taskData: object
   instructions?: string
   jsonSchemaFilename: string
   uiSchemaFilename: string
@@ -41,12 +42,13 @@ const renderers = [
 export const UserTask: FC = ({
   taskId,
   bpmnId,
+  taskData,
   instructions,
   jsonSchemaFilename,
   uiSchemaFilename,
   completer,
 }: UserTaskProps) => {
-  const [data, setData] = useState({})
+  const [data, setData] = useState(taskData)
   const markedInstructions = marked.parse(instructions ?? '# No Instructions Provided.')
   
   return (

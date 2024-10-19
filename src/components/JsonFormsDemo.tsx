@@ -50,6 +50,7 @@ export const JsonFormsDemo: FC = () => {
     })
 
     const json = await resp.json()
+    console.log(json)
     
     setCompleted(json.completed ?? false)
     setPendingTasks(json.pending_tasks ?? [])
@@ -70,13 +71,15 @@ export const JsonFormsDemo: FC = () => {
       <ManualTask
         taskId={task.id}
         bpmnId={task.task_spec.bpmn_id}
-	instructions={task.task_spec.extensions.instructionsForEndUser}
+	taskData={task.data}
+	instructions={task.task_spec.extensions.instructionsForEndUser ?? ''}
 	completer={completeTask}
       />
     : task.task_spec.typename == 'UserTask' ?
       <UserTask
         taskId={task.id}
 	bpmnId={task.task_spec.bpmn_id}
+	taskData={task.data}
 	instructions={task.task_spec.extensions.instructionsForEndUser}
 	jsonSchemaFilename={task.task_spec.extensions.properties.formJsonSchemaFilename}
 	uiSchemaFilename={task.task_spec.extensions.properties.formUiSchemaFilename}
