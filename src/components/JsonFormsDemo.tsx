@@ -1,6 +1,5 @@
-import { FC, useEffect, useMemo, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
 
 import { BoundaryEvent } from './BoundaryEvent';
 import { ManualTask } from './ManualTask';
@@ -35,8 +34,6 @@ const workflowApiKey = 'e5116459-c1d2-4dbe-aaea-7911a0c115bc';
 const initialWorkflowState = {};
 
 export const JsonFormsDemo: FC = () => {
-  const [data, setData] = useState<object>({});
-
   const [completed, setCompleted] = useState(false);
   const [pendingTasks, setPendingTasks] = useState([]);
   const [workflowState, setWorkflowState] = useState(initialWorkflowState);
@@ -54,17 +51,15 @@ export const JsonFormsDemo: FC = () => {
       }),
     });
 
-    const json = await resp.json();
+    const json = await resp.json()
 
-    setCompleted(json.completed ?? false);
-    setPendingTasks(json.pending_tasks ?? []);
-    setWorkflowState(json.state ? { state: json.state } : {});
-    setResult(json.result ?? {});
+    setCompleted(json.completed ?? false)
+    setPendingTasks(json.pending_tasks ?? [])
+    setWorkflowState(json.state ? { state: json.state } : {})
+    setResult(json.result ?? {})
   };
 
-  useEffect(() => {
-    runWorkflow({});
-  }, []);
+  useEffect(() => { runWorkflow({}); }, []); // eslint-disable-line
 
   const completeTask = (id: string, data: object) => {
     runWorkflow({ completed_tasks: [{ id, data }] });
@@ -122,7 +117,7 @@ export const JsonFormsDemo: FC = () => {
             </div>
           </div>
         ) : (
-          <div>{pendingTasks.map((p, i) => componentForTaskSpec(p))}</div>
+          <div>{pendingTasks.map((p) => componentForTaskSpec(p))}</div>
         )}
       </Grid>
     </Grid>

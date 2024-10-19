@@ -1,4 +1,3 @@
-import { FC } from 'react';
 import Button from '@mui/material/Button';
 
 interface BoundaryEventProps {
@@ -19,7 +18,7 @@ const classes = {
   },
 };
 
-export const BoundaryEvent: FC = ({
+export const BoundaryEvent = ({
   taskId,
   bpmnId,
   buttonLabel,

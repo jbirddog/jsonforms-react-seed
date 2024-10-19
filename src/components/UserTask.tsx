@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { useState } from 'react';
 import { marked } from 'marked';
 import { JsonForms } from '@jsonforms/react';
 import {
@@ -39,17 +39,14 @@ const renderers = [
   //register custom renderers
 ];
 
-export const UserTask: FC = ({
+export const UserTask = ({
   taskId,
-  bpmnId,
   taskData,
   instructions,
-  jsonSchemaFilename,
-  uiSchemaFilename,
   completer,
 }: UserTaskProps) => {
   const [data, setData] = useState(taskData);
-  const [errors, setErrors] = useState([]);
+  const [hasErrors, setHasErrors] = useState(false);
   const markedInstructions = marked.parse(
     instructions ?? '# No Instructions Provided.',
   );
@@ -66,7 +63,7 @@ export const UserTask: FC = ({
           cells={materialCells}
           onChange={({ data, errors }) => {
             setData(data);
-            setErrors(errors);
+            setHasErrors(Array.isArray(errors) && errors.length > 0);
             console.log(errors);
           }}
         />
@@ -76,7 +73,7 @@ export const UserTask: FC = ({
         onClick={() => completer(taskId, data)}
         color="primary"
         variant="contained"
-        disabled={errors.length > 0}
+        disabled={hasErrors}
         data-testid="clear-data">
         Continue
       </Button>

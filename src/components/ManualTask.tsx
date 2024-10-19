@@ -1,4 +1,3 @@
-import { FC } from 'react';
 import { marked } from 'marked';
 import Button from '@mui/material/Button';
 
@@ -22,16 +21,15 @@ const classes = {
   },
 };
 
-export const ManualTask: FC = ({
+export const ManualTask = ({
   taskId,
-  bpmnId,
   taskData,
   instructions,
   completer,
 }: ManualTaskProps) => {
   const markedInstructions = marked
     .parse(instructions)
-    .replace(/\{\{(.+)\}\}/, (m, p1) => taskData[p1.trim()]);
+    .replace(/\{\{(.+)\}\}/, (_, p1: string) => taskData[p1.trim()]);
 
   return (
     <>
