@@ -34,6 +34,7 @@ export const JsonFormsDemo: FC = () => {
   const [completed, setCompleted] = useState(false);
   const [pendingTasks, setPendingTasks] = useState([]);
   const [workflowState, setWorkflowState] = useState(initialWorkflowState);
+  const [result, setResult] = useState({});
 
   const runWorkflow = async (additionalBody: object) => {
     const resp = await fetch(`${workflowRunner}/v0/do/${workflowApiKey}`, {
@@ -53,6 +54,7 @@ export const JsonFormsDemo: FC = () => {
     setCompleted(json.completed ?? false)
     setPendingTasks(json.pending_tasks ?? [])
     setWorkflowState(json.state ? { state: json.state } : {})
+    setResult(json.result ?? {})
   }
   
   useEffect(() => {
@@ -93,10 +95,14 @@ export const JsonFormsDemo: FC = () => {
 	  completed === false && pendingTasks.length === 0 ?
 	    <div>Loading...</div>
 	  : completed === true ?
-	    <div>Done!</div>
-	  : pendingTasks.length === 1 ?
-	    <div>{componentForTaskSpec(pendingTasks[0])}</div>
-	  : <div>Multiple tasks pending...</div>
+	    <div>
+	      <h3>Workflow Complete!</h3>
+	      <p>The workflow finished with the resulting data:</p>
+              <div>
+                <pre id="boundData">{JSON.stringify(result, null, 2)}</pre>
+              </div>
+	    </div>
+	  : <div>{pendingTasks.map((p, i) => componentForTaskSpec(p))}</div>
 	    
 	}
       </Grid>
