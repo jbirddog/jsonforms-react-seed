@@ -23,6 +23,10 @@ const classes = {
   },
 };
 
+interface Keyable {
+  [key: string]: any; // eslint-disable-line
+}
+
 // local
 //const workflowRunner = 'http://localhost:8100'
 //const workflowApiKey = '31200470-da18-48f9-8ba1-6225be674c33'
@@ -39,7 +43,7 @@ export const JsonFormsDemo: FC = () => {
   const [workflowState, setWorkflowState] = useState(initialWorkflowState);
   const [result, setResult] = useState({});
 
-  const runWorkflow = async (additionalBody: object) => {
+  const runWorkflow = async (additionalBody: Keyable) => {
     const resp = await fetch(`${workflowRunner}/v0/do/${workflowApiKey}`, {
       method: 'POST',
       headers: {
@@ -51,21 +55,23 @@ export const JsonFormsDemo: FC = () => {
       }),
     });
 
-    const json = await resp.json()
+    const json = await resp.json();
 
-    setCompleted(json.completed ?? false)
-    setPendingTasks(json.pending_tasks ?? [])
-    setWorkflowState(json.state ? { state: json.state } : {})
-    setResult(json.result ?? {})
+    setCompleted(json.completed ?? false);
+    setPendingTasks(json.pending_tasks ?? []);
+    setWorkflowState(json.state ? { state: json.state } : {});
+    setResult(json.result ?? {});
   };
 
-  useEffect(() => { runWorkflow({}); }, []); // eslint-disable-line
+  useEffect(() => {
+    runWorkflow({});
+  }, []); // eslint-disable-line
 
   const completeTask = (id: string, data: object) => {
     runWorkflow({ completed_tasks: [{ id, data }] });
   };
 
-  const componentForTaskSpec = (task: object) =>
+  const componentForTaskSpec = (task: Keyable) =>
     task.task_spec.typename == 'ManualTask' ? (
       <ManualTask
         taskId={task.id}
@@ -117,7 +123,7 @@ export const JsonFormsDemo: FC = () => {
             </div>
           </div>
         ) : (
-          <div>{pendingTasks.map((p) => componentForTaskSpec(p))}</div>
+          <div>{pendingTasks.map(p => componentForTaskSpec(p))}</div>
         )}
       </Grid>
     </Grid>

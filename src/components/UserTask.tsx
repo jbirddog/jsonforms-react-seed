@@ -9,10 +9,14 @@ import Button from '@mui/material/Button';
 import schema from '../schema.json';
 import uischema from '../uischema.json';
 
+interface Keyable {
+  [key: string]: any; // eslint-disable-line
+}
+
 interface UserTaskProps {
   taskId: string;
   bpmnId: string;
-  taskData: object;
+  taskData: Keyable;
   instructions?: string;
   jsonSchemaFilename: string;
   uiSchemaFilename: string;

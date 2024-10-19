@@ -1,10 +1,14 @@
 import { marked } from 'marked';
 import Button from '@mui/material/Button';
 
+interface Keyable {
+  [key: string]: any; // eslint-disable-line
+}
+
 interface ManualTaskProps {
   taskId: string;
   bpmnId: string;
-  taskData: object;
+  taskData: Keyable;
   instructions: string;
   completer(bpmnId: string, data: object): void;
 }
@@ -27,9 +31,12 @@ export const ManualTask = ({
   instructions,
   completer,
 }: ManualTaskProps) => {
-  const markedInstructions = marked
-    .parse(instructions)
-    .replace(/\{\{(.+)\}\}/, (_, p1: string) => taskData[p1.trim()]);
+  const markedInstructions = marked.parse(
+    instructions.replace(
+      /\{\{(.+)\}\}/,
+      (_, p1: string) => taskData[p1.trim()],
+    ),
+  );
 
   return (
     <>
