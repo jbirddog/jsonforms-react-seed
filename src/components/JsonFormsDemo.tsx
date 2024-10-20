@@ -1,5 +1,6 @@
 import { FC, useEffect, useState } from 'react';
 import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
 
 import { BoundaryEvent } from './BoundaryEvent';
 import { ManualTask } from './ManualTask';
@@ -20,6 +21,11 @@ const classes = {
     borderRadius: '0.25em',
     backgroundColor: '#cecece',
     marginBottom: '1rem',
+  },
+  resetButton: {
+    margin: 'auto !important',
+    'margin-right': '1em',
+    display: 'block !important',
   },
 };
 
@@ -121,6 +127,17 @@ export const JsonFormsDemo: FC = () => {
             <div>
               <pre id="boundData">{JSON.stringify(result, null, 2)}</pre>
             </div>
+            <Button
+              style={classes.resetButton}
+              onClick={() => {
+                setWorkflowState(initialWorkflowState)
+                runWorkflow({})
+              }}
+              color="primary"
+              variant="contained"
+              data-testid="clear-data">
+              Start Over
+            </Button>
           </div>
         ) : (
           <div>{pendingTasks.map(p => componentForTaskSpec(p))}</div>

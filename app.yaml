@@ -1,0 +1,5 @@
+name: chuck
+app_id: da_K1EIZtMUQ7eK
+owner: jbirddog
+package: .
+kind: wasmer.io/App.v0
